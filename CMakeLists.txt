@@ -21,7 +21,7 @@ else()
     # Old CMake
     add_executable(vector_add_example ${cpu_source_files})
     if(USE_CUDA)
-        find_package(CUDA 8.0)
+        find_package(CUDA 9.0)
         if(NOT CUDA_FOUND)
             message(STATUS "CUDA not found")
             set(USE_CUDA OFF)
