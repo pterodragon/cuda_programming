@@ -1,3 +1,4 @@
+export CUDACXX=$(which nvcc) || "/opt/cuda/bin/nvcc"
 #!/bin/bash
 set -e
 set -x
@@ -10,4 +11,4 @@ cd build
 # for release build: -DCMAKE_BUILD_TYPE=Release
 cmake .. $@
 make
-./vector_add_example
+./main
