@@ -70,6 +70,24 @@ void test_matmul() {
     print_mat(c, m_d, n_d);
 }
 
+void test_matmul_tiled() {
+    /*
+     * [m][k] @ [k][n] = [m][n]
+     */
+    const int m_d = 3;
+    const int n_d = 4;
+    const int k_d = 5;
+    const int A = m_d * k_d;
+    const int B = k_d * n_d;
+    const int C = m_d * n_d;
+    int a[A], b[B], c[C];
+    fill_array(a, A, 4);
+    fill_array(b, B, 5);
+    matrix_mult_tiled(a, b, c, m_d, n_d, k_d);
+    print_mat(a, m_d, k_d);
+    print_mat(b, k_d, n_d);
+    print_mat(c, m_d, n_d);
+}
 void ps() {
   printf("---\n");
 }
@@ -83,6 +101,8 @@ int main() {
     my_add();
     ps();
     test_matmul();
+    ps();
+    test_matmul_tiled();
     ps();
 #else
     std::cout << "CUDA: Off" << std::endl;
