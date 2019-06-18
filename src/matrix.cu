@@ -55,11 +55,11 @@ __global__ void matrix_mult_kernel_tiled(int *d_m, int *d_n, int *d_p, int m,
   for (int i = 0; i < ceil(k / (float)TILE_WIDTH); ++i) {
     // thread collaborative loading into shared memory
     if (row < m && (i * TILE_WIDTH + tx) < k)
-      ds_m[ty][tx] = d_m[row * k + i * TILE_WIDTH + tx];
+      ds_m[ty][tx] = d_m[row * k + i * TILE_WIDTH + tx]; // coalesced
     else
       ds_m[ty][tx] = 0;
     if (col < n && (i * TILE_WIDTH + ty) < k)
-      ds_n[ty][tx] = d_n[(i * TILE_WIDTH + ty) * n + col];
+      ds_n[ty][tx] = d_n[(i * TILE_WIDTH + ty) * n + col]; // coalesced
     else
       ds_n[ty][tx] = 0;
 

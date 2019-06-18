@@ -97,7 +97,11 @@ int main() {
 
 #ifdef USE_CUDA
     std::cout << "CUDA: On" << std::endl;
+    ps();
     printCudaVersion();
+    ps();
+    print_device_properties();
+    ps();
     my_add();
     ps();
     test_matmul();
