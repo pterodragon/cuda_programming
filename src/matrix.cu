@@ -32,13 +32,13 @@ __global__ void matrix_mult_kernel(int *a, int *b, int *c, int m, int n,
     c[row * n + col] = sum;
   }
 }
+constexpr int TILE_WIDTH = 16;
 
 __global__ void matrix_mult_kernel_tiled(int *d_m, int *d_n, int *d_p, int m,
                                          int n, int k) {
   /*
    * [m][k] @ [k][n] = [m][n]
    */
-  constexpr int TILE_WIDTH = 16;
   __shared__ int ds_m[TILE_WIDTH][TILE_WIDTH]; // ds: device shared memory
   __shared__ int ds_n[TILE_WIDTH][TILE_WIDTH];
 
@@ -78,9 +78,10 @@ void matrix_mult_tiled(int *a, int *b, int *c, int m, int n, int k) {
   /*
    * [m][k] @ [k][n] = [m][n]
    */
-  constexpr int BLOCK_WIDTH = 16;
-  int n_blocks = ceil(m / (float)BLOCK_WIDTH);
-  dim3 dimGrid(n_blocks, n_blocks);
+  constexpr int BLOCK_WIDTH = TILE_WIDTH;
+  int m_blocks = (m + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+  int n_blocks = (n + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+  dim3 dimGrid(m_blocks, n_blocks);
   dim3 dimBlock(BLOCK_WIDTH, BLOCK_WIDTH);
 
   cudaError_t err = cudaSuccess;

@@ -4,6 +4,7 @@
 #ifdef USE_CUDA
 #include "gpu.hpp"
 #include "matrix.hpp"
+#include "convolution.hpp"
 #endif
 
 template<typename T>
@@ -31,10 +32,10 @@ void print_mat(T *arr, int m, int n) {
   for (int j = 0; j < m; ++j) {
     std::cout << '[';
     for (int i = 0; i < n - 1; ++i) {
-        std::cout << arr[i] << ", ";
+        std::cout << arr[j * n + i] << ", ";
     }
     if (n > 0) {
-        std::cout << arr[n - 1];
+        std::cout << arr[j * n + n - 1];
     }
     std::cout << "]" << std::endl;
   }
@@ -88,6 +89,40 @@ void test_matmul_tiled() {
     print_mat(b, k_d, n_d);
     print_mat(c, m_d, n_d);
 }
+
+void test_convolution_2d_tiled() {
+    const int height = 5;
+    const int width = 7;
+    const int pitch = 8;
+    const int mask_width = 3;
+    const int N_size = height * pitch;
+    const int M_size = mask_width * mask_width;
+    float N[N_size], M[M_size], P[N_size];
+    fill_array(N, N_size, 1.0f);
+    fill_array(M, M_size, 2.0f);
+    M[4] = 10.0f;
+    for (int q = 0; q < height; ++q) {
+      for (int w = width; w < pitch; ++w) {
+        N[pitch * q + w] = 0.0f;
+      }
+    }
+    for (int q = 0; q < height; ++q) {
+      for (int w = 0; w < pitch; ++w) {
+        P[pitch * q + w] = -1.0f;
+      }
+    }
+    print_mat(N, height, pitch);
+    print_mat(M, mask_width, mask_width);
+
+    std::cout << "height = " << height << '\n';
+    std::cout << "width = " << width << '\n';
+    std::cout << "pitch = " << pitch << '\n';
+    std::cout << "mask_width = " << mask_width << '\n';
+    convolution_2D_tiled(P, N, height, width, pitch, mask_width, M);
+
+    print_mat(P, height, pitch);
+}
+
 void ps() {
   printf("---\n");
 }
@@ -102,11 +137,13 @@ int main() {
     ps();
     print_device_properties();
     ps();
-    my_add();
-    ps();
-    test_matmul();
-    ps();
-    test_matmul_tiled();
+    // my_add();
+    // ps();
+    // test_matmul();
+    // ps();
+    // test_matmul_tiled();
+    // ps();
+    test_convolution_2d_tiled();
     ps();
 #else
     std::cout << "CUDA: Off" << std::endl;
