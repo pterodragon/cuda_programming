@@ -5,6 +5,7 @@
 #include "gpu.hpp"
 #include "matrix.hpp"
 #include "convolution.hpp"
+#include "inclusive_scan.hpp"
 #endif
 
 template<typename T>
@@ -123,6 +124,16 @@ void test_convolution_2d_tiled() {
     print_mat(P, height, pitch);
 }
 
+void test_inclusive_scan() {
+  const int N = 1 << 16;
+  float nums[N], out[N];
+  for (int q = 0; q < N; ++q) nums[q] = (int)(q / 2048 + 1);
+  print_array(nums, N);
+  inclusive_scan(nums, out, N);
+  print_array(out, N);
+  // answer should be (32 * 33) / 2 * 2048 = 1081344
+}
+
 void ps() {
   printf("---\n");
 }
@@ -137,13 +148,15 @@ int main() {
     ps();
     print_device_properties();
     ps();
-    // my_add();
-    // ps();
-    // test_matmul();
-    // ps();
-    // test_matmul_tiled();
-    // ps();
-    test_convolution_2d_tiled();
+//    my_add();
+//    ps();
+//    test_matmul();
+//    ps();
+//    test_matmul_tiled();
+//    ps();
+//    test_convolution_2d_tiled();
+//    ps();
+    test_inclusive_scan();
     ps();
 #else
     std::cout << "CUDA: Off" << std::endl;
