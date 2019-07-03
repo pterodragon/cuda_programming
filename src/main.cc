@@ -2,56 +2,12 @@
 #include <cstring>
 
 #ifdef USE_CUDA
+#include "util.hpp"
 #include "gpu.hpp"
 #include "matrix.hpp"
 #include "convolution.hpp"
 #include "inclusive_scan.hpp"
 #endif
-
-template<typename T>
-void fill_array(T *arr, int n, T v) {
-    for (int i = 0; i < n; ++i) {
-        arr[i] = v;
-    }
-}
-
-
-template<typename T>
-void print_array(T *arr, int n) {
-    std::cout << '[';
-    for (int i = 0; i < n - 1; ++i) {
-        std::cout << arr[i] << ", ";
-    }
-    if (n > 0) {
-        std::cout << arr[n - 1];
-    }
-    std::cout << "]" << std::endl;
-}
-
-template<typename T>
-void print_mat(T *arr, int m, int n) {
-  for (int j = 0; j < m; ++j) {
-    std::cout << '[';
-    for (int i = 0; i < n - 1; ++i) {
-        std::cout << arr[j * n + i] << ", ";
-    }
-    if (n > 0) {
-        std::cout << arr[j * n + n - 1];
-    }
-    std::cout << "]" << std::endl;
-  }
-}
-
-void my_add() {
-    const int n = 25600;
-    float a[n], b[n], c[n];
-    fill_array(a, n, 1.0f);
-    fill_array(b, n, 2.0f);
-    vecAdd(a, b, c, n);
-    print_array(a, 3);
-    print_array(b, 3);
-    print_array(c, 3);
-}
 
 void test_matmul() {
     /*
@@ -148,14 +104,12 @@ int main() {
     ps();
     print_device_properties();
     ps();
-//    my_add();
-//    ps();
-//    test_matmul();
-//    ps();
-//    test_matmul_tiled();
-//    ps();
-//    test_convolution_2d_tiled();
-//    ps();
+    test_matmul();
+    ps();
+    test_matmul_tiled();
+    ps();
+    test_convolution_2d_tiled();
+    ps();
     test_inclusive_scan();
     ps();
 #else

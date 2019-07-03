@@ -2,25 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "util.hpp"
 #include "gpu.hpp"
-
-#ifndef NDEBUG
-#define gpuErrchk(ans)                                                         \
-  { gpuAssert((ans), __FILE__, __LINE__); }
-#else
-#define gpuErrchk(ans)                                                         \
-  {}
-#endif
-
-inline void gpuAssert(cudaError_t code, const char *file, int line,
-                      bool abort = true) {
-  if (code != cudaSuccess) {
-    fprintf(stderr, "GPUassert: %s %s %d\n", cudaGetErrorString(code), file,
-            line);
-    if (abort)
-      exit(code);
-  }
-}
 
 #define MAX_MASK_WIDTH 5
 #define MAX_MASK_SIZE (MAX_MASK_WIDTH * MAX_MASK_WIDTH)

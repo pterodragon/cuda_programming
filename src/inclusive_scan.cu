@@ -3,25 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "util.hpp"
 #include "inclusive_scan.hpp"
-
-#ifndef NDEBUG
-#define gpuErrchk(ans)                                                         \
-  { gpuAssert((ans), __FILE__, __LINE__); }
-#else
-#define gpuErrchk(ans)                                                         \
-  {}
-#endif
-
-inline void gpuAssert(cudaError_t code, const char *file, int line,
-                      bool abort = true) {
-  if (code != cudaSuccess) {
-    fprintf(stderr, "GPUassert: %s %s %d\n", cudaGetErrorString(code), file,
-            line);
-    if (abort)
-      exit(code);
-  }
-}
 
 constexpr const int SECTION_SIZE = 2048;
 constexpr const int MAX_SECTIONS = 1024;
