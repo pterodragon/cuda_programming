@@ -7,6 +7,7 @@
 #include "matrix.hpp"
 #include "convolution.hpp"
 #include "inclusive_scan.hpp"
+#include "histogram.hpp"
 #endif
 
 void test_matmul() {
@@ -90,6 +91,13 @@ void test_inclusive_scan() {
   // answer should be (32 * 33) / 2 * 2048 = 1081344
 }
 
+void test_histogram() {
+  unsigned char str[] = "abcdefghijklmnopqrstuvwxyz";
+  unsigned int histo[26 / 4 + 1] = {};
+  histogram(str, histo, sizeof(str) - 1, 26 / 4 + 1);
+  print_array(histo, 26 / 4 + 1);
+}
+
 void ps() {
   printf("---\n");
 }
@@ -111,6 +119,8 @@ int main() {
     test_convolution_2d_tiled();
     ps();
     test_inclusive_scan();
+    ps();
+    test_histogram();
     ps();
 #else
     std::cout << "CUDA: Off" << std::endl;

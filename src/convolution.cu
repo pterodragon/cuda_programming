@@ -67,19 +67,6 @@ __global__ void convolution_2D_tiled_kernel(float *P, float *N, int height,
   }
 }
 
-void print_mat2(float *arr, int m, int n) {
-  for (int j = 0; j < m; ++j) {
-    std::cout << '[';
-    for (int i = 0; i < n - 1; ++i) {
-      std::cout << arr[j * n + i] << ", ";
-    }
-    if (n > 0) {
-      std::cout << arr[j * n + n - 1];
-    }
-    std::cout << "]" << std::endl;
-  }
-}
-
 void convolution_2D_tiled(float *P, float *N, int height, int width, int pitch,
                           int mask_width, float *M) {
   std::cout << __PRETTY_FUNCTION__ << std::endl;
